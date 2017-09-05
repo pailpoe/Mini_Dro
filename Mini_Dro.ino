@@ -1,21 +1,27 @@
-/*
-Dro mini system
-*/
 /*********************************************************************
-Project Name    :	Dro Mini
-Hard revision   :	V1.0
-Soft revision   :	/
-Description     :	Dro system for lathe or milling machine with 3 quadrature decoder, Oled SSD1306 display and 4 push buttons
-Chip            :	STM32F103C8T6
-freq uc         :	72Mhz 
-Compiler        :	Arduino IDE 1.8.3
-Author          :	G.Pailleret, 2017 
+Project Name    :   Mini Dro
+Hard revision   :   V1.0
+Soft revision   :   /
+Description     :   Dro system for lathe or milling machine with 3 quadrature decoder, Oled SSD1306 display and 4 push buttons
+Chip            :   STM32F103C8T6
+freq uc         :   72Mhz (use 8Mhz external oscillator with PLL ) 
+Compiler        :   Arduino IDE 1.8.3
+Author          :   G.Pailleret, 2017 
 
 Remark          :  ok
 
 
+Hardware config : 
+                    * Oled display in I2C_1 (SCL = PB6 and SDA = PB7) use STM32 I2C function
+                    * Quadrature X on Timer1 ( PA8 and PA9)
+                    * Quadrature Y on Timer3 ( PA6 and PA7)
+                    * Quadrature Z on Timer4 ( PA0 and PA1)
+                    * Button X (X reset) on PB15
+                    * Button Y (Y reset) on PB14
+                    * Button Z (Z reset) on PB12
+                    * Button M (M reset) on PB13
 
-Historiques		:
+Revision        :
 
 *********************************************************************/
 
@@ -45,15 +51,6 @@ QuadDecoder Quad_Z(512,false,false);
 //Keyboard
 Button MiniDroKeyboard;
 
-#define IN_SW_X PB15
-#define IN_SW_Y PB14
-#define IN_SW_Z PB12
-#define IN_SW_M PB13
-
-
-
-
-
 typedef struct
 {
   boolean Inverted_X;  
@@ -67,10 +64,7 @@ enum eMS_Dro
         {   
       State_Normal, 
       State_In_Config 
-
     };
-
-
 
 // Variable
 sConfigDro ConfigDro;
@@ -100,8 +94,7 @@ if (timer_Z.getDirection()){
 }
 }
 void SysTick_Handler() 
-{
-  
+{ 
   //TestSys++;
 }
 
@@ -116,12 +109,6 @@ void setup()   {
   //Test led PC13
   pinMode(PC13, OUTPUT);  //
   digitalWrite(PC13, LOW);
-
-  //Switch
-  pinMode(IN_SW_X, INPUT_PULLUP);
-  pinMode(IN_SW_Y, INPUT_PULLUP);  
-  pinMode(IN_SW_Z, INPUT_PULLUP);  
-  pinMode(IN_SW_M, INPUT_PULLUP);
 
   /* Systick used by I2C at 1Khz... */ 
   systick_attach_callback(SysTick_Handler);
