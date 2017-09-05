@@ -1,26 +1,22 @@
 /*
-STM32 adaption by Matthias Diro, tested with maple mini and heltec OLED 12864 I2c; adress: 0x3C 
-Things to know:
- This adaption uses hardware I2C (hardwire.h), Port: I2c1. SCL1=PB6 and SDA1=PB7
- Use serial2 : Rx2=PA3 and Tx2=PA2 
- further details: STM32_README.txt
+Dro mini system
 */
 /*********************************************************************
-This is an example for our Monochrome OLEDs based on SSD1306 drivers
+Project Name    :	Dro Mini
+Hard revision   :	V1.0
+Soft revision   :	/
+Description     :	Dro system for lathe or milling machine with 3 quadrature decoder, Oled SSD1306 display and 4 push buttons
+Chip            :	STM32F103C8T6
+freq uc         :	72Mhz 
+Compiler        :	Arduino IDE 1.8.3
+Author          :	G.Pailleret, 2017 
 
-  Pick one up today in the adafruit shop!
-  ------> http://www.adafruit.com/category/63_98
+Remark          : 
 
-This example is for a 128x64 size display using I2C to communicate
-3 pins are required to interface (2 I2C and one reset)
 
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
-products from Adafruit!
 
-Written by Limor Fried/Ladyada  for Adafruit Industries.  
-BSD license, check license.txt for more information
-All text above, and the splash screen must be included in any redistribution
+Historiques		:
+
 *********************************************************************/
 
 #include <SPI.h>
