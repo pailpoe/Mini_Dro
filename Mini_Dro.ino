@@ -11,7 +11,7 @@ freq uc         :	72Mhz
 Compiler        :	Arduino IDE 1.8.3
 Author          :	G.Pailleret, 2017 
 
-Remark          : OK
+Remark          : 
 
 
 
