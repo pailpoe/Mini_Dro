@@ -32,6 +32,7 @@ Revision        :
 #include "HardwareTimer.h"
 #include "QuadDecoder.h"
 #include "Button.h"
+#include <EEPROM.h>
 
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
@@ -60,11 +61,23 @@ typedef struct
   unsigned int  Resolution;
 } sConfigDro;
 
+const sConfigDro csConfigDefault = {false,false,false,false,512};
+
+
+
 enum eMS_Dro 
         {   
       State_Normal, 
       State_In_Config 
     };
+
+
+struct MyObject{
+  float field1;
+  byte field2;
+  char name[10];
+};
+
 
 // Variable
 sConfigDro ConfigDro;
@@ -100,9 +113,20 @@ void SysTick_Handler()
 
 
 
-void setup()   {                
-  Serial2.begin(115200);
-  Serial2.println("\nTest");
+void setup()   {
+
+  /*                
+  Serial.begin(115200);
+  Serial.println("\nTest");
+  Restore_Config();
+  SaveConfigInFlash();
+  while(1)
+  {
+    Serial.print("-");    
+    delay(100); 
+    Serial.print(sizeof(ConfigDro));   
+  }
+  */
 
   MS_Dro = State_Normal; 
 
@@ -167,6 +191,9 @@ void setup()   {
   display.clearDisplay();
   display.display();
   delay(1000);
+
+
+  
 }
 
 void loop() 
@@ -175,6 +202,7 @@ void loop()
   unsigned int CurrentSelection=1;
   while (1) 
   {
+    Serial.print("-");
     Quad_X.CounterValue(timer_X.getCount());
     Quad_Y.CounterValue(timer_Y.getCount());
     Quad_Z.CounterValue(timer_Z.getCount());
@@ -333,6 +361,21 @@ void Restore_Config()
   //Dispatch the config
   Dispatch_Config();
 }
+
+void SaveConfigInFlash()
+{
+  unsigned int uiCount;
+  char *pt;
+  EEPROM.format();
+  pt = (char*)&ConfigDro; 
+  for(uiCount=0;uiCount<sizeof(ConfigDro);uiCount++)
+  {
+    EEPROM.write(uiCount,*pt);
+    pt++;  
+  } 
+}
+
+
 void Dispatch_Config()
 {
   Quad_X.SetSens( ConfigDro.Inverted_X );  
