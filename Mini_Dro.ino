@@ -115,19 +115,18 @@ void SysTick_Handler()
 
 void setup()   {
 
-  /*                
+  /*            
   Serial.begin(115200);
   Serial.println("\nTest");
-  Restore_Config();
-  SaveConfigInFlash();
+  ReadConfigInFlash(&ConfigDro);
+  //SaveConfigInFlash();
   while(1)
   {
     Serial.print("-");    
     delay(100); 
-    Serial.print(sizeof(ConfigDro));   
   }
   */
-
+  
   MS_Dro = State_Normal; 
 
   //Test led PC13
@@ -229,7 +228,10 @@ void loop()
         if(eState == M_LongPressed) 
         { 
           MS_Dro = State_Normal ;
-          Dispatch_Config();
+          //Store config in memort
+          SaveConfigInFlash(&ConfigDro);
+          //Dispatch config to function
+          Dispatch_Config(&ConfigDro);
         }
         if(eState == X_KeyShortPressed)
         {
@@ -257,10 +259,8 @@ void loop()
             case 4:
               ConfigDro.Diameter_Mode_Y = !ConfigDro.Diameter_Mode_Y;
             break;                        
-          }
-            
-        }
-        
+          }    
+        }  
         Display_Config(CurrentSelection);
       break;   
     }  
@@ -352,39 +352,52 @@ void Display_Config(unsigned int CurrentSelection)
 
 void Restore_Config()
 {
-  ConfigDro.Inverted_X = false;
-  ConfigDro.Inverted_Y = false;  
-  ConfigDro.Inverted_Z = false;
-  ConfigDro.Diameter_Mode_Y = false;
-  ConfigDro.Resolution = 512;
-
+  //Read Config in Memory
+  ReadConfigInFlash(&ConfigDro);
   //Dispatch the config
-  Dispatch_Config();
+  Dispatch_Config(&ConfigDro);
 }
-
-void SaveConfigInFlash()
+void SaveConfigInFlash(sConfigDro *pConf)
 {
   unsigned int uiCount;
   char *pt;
   EEPROM.format();
-  pt = (char*)&ConfigDro; 
-  for(uiCount=0;uiCount<sizeof(ConfigDro);uiCount++)
+  pt = (char*)pConf; 
+  for(uiCount=0;uiCount<sizeof(sConfigDro);uiCount++)
   {
     EEPROM.write(uiCount,*pt);
     pt++;  
   } 
 }
-
-
-void Dispatch_Config()
+void ReadConfigInFlash(sConfigDro *pConf)
 {
-  Quad_X.SetSens( ConfigDro.Inverted_X );  
-  Quad_Y.SetSens( ConfigDro.Inverted_Y );
-  Quad_Z.SetSens( ConfigDro.Inverted_Z );
-  Quad_Y.SetDiameterMode(ConfigDro.Diameter_Mode_Y);
-  Quad_X.SetResolution(ConfigDro.Resolution);
-  Quad_Y.SetResolution(ConfigDro.Resolution);
-  Quad_Z.SetResolution(ConfigDro.Resolution);
+  unsigned int uiCount;
+  uint16 uiState;
+  uint16 value;
+  char *pt;
+  uiState = EEPROM_OK;
+  pt = (char*)pConf; 
+  for(uiCount=0;uiCount<sizeof(sConfigDro);uiCount++)
+  {
+    uiState |= EEPROM.read(uiCount,&value);
+    *pt = (char) value;
+    pt++;  
+  }
+  if(uiState != EEPROM_OK)
+  {
+    //Problem, restore default  
+    *pConf = csConfigDefault;
+  } 
+}
+void Dispatch_Config(sConfigDro *pConf)
+{
+  Quad_X.SetSens( pConf->Inverted_X );  
+  Quad_Y.SetSens( pConf->Inverted_Y );
+  Quad_Z.SetSens( pConf->Inverted_Z );
+  Quad_Y.SetDiameterMode(pConf->Diameter_Mode_Y);
+  Quad_X.SetResolution(pConf->Resolution);
+  Quad_Y.SetResolution(pConf->Resolution);
+  Quad_Z.SetResolution(pConf->Resolution);
 }
 
 
