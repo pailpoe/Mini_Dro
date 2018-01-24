@@ -253,10 +253,15 @@ void loop()
             case 4:
               ConfigDro.Diameter_Mode_Y = !ConfigDro.Diameter_Mode_Y;
             break; 
-            case 6:
-
+            case 5:
+              if(ConfigDro.Reso_X != 1)ConfigDro.Reso_X--;            
+            break;
             break; 
+            case 6:
+              if(ConfigDro.Reso_Y != 1)ConfigDro.Reso_Y--;      
+            break;
             case 7:
+              if(ConfigDro.Reso_Z != 1)ConfigDro.Reso_Z--;  
             break;
             case 8:
                MS_Dro = State_Normal ;
@@ -264,6 +269,36 @@ void loop()
               SaveConfigInFlash(&ConfigDro);
               //Dispatch config to function
               Dispatch_Config(&ConfigDro);
+            break;
+              
+          }    
+        }
+        if(eState == M_KeyShortPressed)
+        {
+          switch(CurrentSelection)
+          {
+            case 1:
+             
+            break;  
+            case 2:
+  
+            break;
+            case 3:
+ 
+            break;
+            case 4:
+            break; 
+            case 5:
+              if(ConfigDro.Reso_X <= 1000)ConfigDro.Reso_X++;            
+            break;
+            break; 
+            case 6:
+              if(ConfigDro.Reso_Y <= 1000)ConfigDro.Reso_Y++;      
+            break;
+            case 7:
+              if(ConfigDro.Reso_Z <= 1000)ConfigDro.Reso_Z++;  
+            break;
+            case 8:
             break;
               
           }    
@@ -351,13 +386,16 @@ void Display_Config(unsigned int CurrentSelection)
   else display.println("false");
   if(CurrentSelection==4)display.setTextColor(WHITE);
   if (CurrentSelection==5)display.setTextColor(BLACK,WHITE);
-  display.println("Reso X: 512");
+  display.print("Reso X: ");
+  display.println(ConfigDro.Reso_X,DEC);
   if(CurrentSelection==5)display.setTextColor(WHITE);
   if (CurrentSelection==6)display.setTextColor(BLACK,WHITE);
-  display.println("Reso Y: 512");
+  display.print("Reso Y: ");
+  display.println(ConfigDro.Reso_Y,DEC);
   if(CurrentSelection==6)display.setTextColor(WHITE);
   if (CurrentSelection==7)display.setTextColor(BLACK,WHITE);
-  display.println("Reso Z: 512");
+  display.print("Reso Z: ");
+  display.println(ConfigDro.Reso_Z,DEC);
   if(CurrentSelection==7)display.setTextColor(WHITE);
   if (CurrentSelection==8)display.setTextColor(BLACK,WHITE);
   display.println("--> Save & Exit");
