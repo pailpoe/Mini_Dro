@@ -58,10 +58,12 @@ typedef struct
   boolean Inverted_Y;
   boolean Inverted_Z;
   boolean Diameter_Mode_Y;
-  unsigned int  Resolution;
+  unsigned int  Reso_X;
+  unsigned int  Reso_Y;
+  unsigned int  Reso_Z;
 } sConfigDro;
 
-const sConfigDro csConfigDefault = {false,false,false,false,512};
+const sConfigDro csConfigDefault = {false,false,false,false,512,512,512};
 
 
 
@@ -225,22 +227,14 @@ void loop()
       break;
       case State_In_Config:
         //Config mode
-        if(eState == M_LongPressed) 
-        { 
-          MS_Dro = State_Normal ;
-          //Store config in memort
-          SaveConfigInFlash(&ConfigDro);
-          //Dispatch config to function
-          Dispatch_Config(&ConfigDro);
-        }
         if(eState == X_KeyShortPressed)
         {
-          if(CurrentSelection==1)CurrentSelection=6;
+          if(CurrentSelection==1)CurrentSelection=8;
           else CurrentSelection--;     
         }
         if(eState == Z_KeyShortPressed)
         {
-          if(CurrentSelection==6)CurrentSelection=1;
+          if(CurrentSelection==8)CurrentSelection=1;
           else CurrentSelection++;     
         }
         if(eState == Y_KeyShortPressed)
@@ -258,7 +252,20 @@ void loop()
             break;
             case 4:
               ConfigDro.Diameter_Mode_Y = !ConfigDro.Diameter_Mode_Y;
-            break;                        
+            break; 
+            case 6:
+
+            break; 
+            case 7:
+            break;
+            case 8:
+               MS_Dro = State_Normal ;
+              //Store config in memort
+              SaveConfigInFlash(&ConfigDro);
+              //Dispatch config to function
+              Dispatch_Config(&ConfigDro);
+            break;
+              
           }    
         }  
         Display_Config(CurrentSelection);
@@ -294,18 +301,21 @@ void Display_Test()
   display.setTextSize(2);
   if(Quad_X.RelativeModeActived()) display.setTextColor(BLACK,WHITE);
   else display.setTextColor(WHITE);  
-  display.print("X:");
+  display.print("X");
   display.setTextColor(WHITE);
+  display.print(":");  
   display.println(buffer_x);
   if(Quad_Y.RelativeModeActived()) display.setTextColor(BLACK,WHITE);
   else display.setTextColor(WHITE);  
-  display.print("Y:");
+  display.print("Y");
   display.setTextColor(WHITE);
+  display.print(":");  
   display.println(buffer_y);
   if(Quad_Z.RelativeModeActived()) display.setTextColor(BLACK,WHITE);
   else display.setTextColor(WHITE);  
-  display.print("Z:"); 
+  display.print("Z");
   display.setTextColor(WHITE);
+  display.print(":");  
   display.println(buffer_z);
   display.display();
 }
@@ -320,7 +330,6 @@ void Display_Config(unsigned int CurrentSelection)
   display.setTextColor(WHITE);
   display.setCursor(0,0);
   display.setTextSize(1);
-  display.println(" ** DRO CONFIG **");
   if(CurrentSelection==1)display.setTextColor(BLACK,WHITE); 
   display.print("X inverted : ");
   if(ConfigDro.Inverted_X)display.println("true");
@@ -342,11 +351,16 @@ void Display_Config(unsigned int CurrentSelection)
   else display.println("false");
   if(CurrentSelection==4)display.setTextColor(WHITE);
   if (CurrentSelection==5)display.setTextColor(BLACK,WHITE);
-  display.println("Resolution : 512");
+  display.println("Reso X: 512");
   if(CurrentSelection==5)display.setTextColor(WHITE);
   if (CurrentSelection==6)display.setTextColor(BLACK,WHITE);
+  display.println("Reso Y: 512");
+  if(CurrentSelection==6)display.setTextColor(WHITE);
+  if (CurrentSelection==7)display.setTextColor(BLACK,WHITE);
+  display.println("Reso Z: 512");
+  if(CurrentSelection==7)display.setTextColor(WHITE);
+  if (CurrentSelection==8)display.setTextColor(BLACK,WHITE);
   display.println("--> Save & Exit");
-  if(CurrentSelection==5)display.setTextColor(WHITE);
   display.display();
 }
 
@@ -395,9 +409,9 @@ void Dispatch_Config(sConfigDro *pConf)
   Quad_Y.SetSens( pConf->Inverted_Y );
   Quad_Z.SetSens( pConf->Inverted_Z );
   Quad_Y.SetDiameterMode(pConf->Diameter_Mode_Y);
-  Quad_X.SetResolution(pConf->Resolution);
-  Quad_Y.SetResolution(pConf->Resolution);
-  Quad_Z.SetResolution(pConf->Resolution);
+  Quad_X.SetResolution(pConf->Reso_X);
+  Quad_Y.SetResolution(pConf->Reso_Y);
+  Quad_Z.SetResolution(pConf->Reso_Z);
 }
 
 
