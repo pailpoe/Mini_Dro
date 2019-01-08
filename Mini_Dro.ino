@@ -1,3 +1,4 @@
+
 /*********************************************************************
 Project Name    :   Mini Dro
 Hard revision   :   V1.0
@@ -451,6 +452,3 @@ void Dispatch_Config(sConfigDro *pConf)
   Quad_Y.SetResolution(pConf->Reso_Y);
   Quad_Z.SetResolution(pConf->Reso_Z);
 }
-
-
-
