@@ -328,7 +328,7 @@ void Display_Test()
   display.setTextColor(BLACK,WHITE);
   display.setCursor(0,0);
   display.setTextSize(1);
-  display.println(" Mini Dro V1.0 GPA ");
+  display.println("  Mini Dro V1.000   ");
   display.setTextSize(1);
   display.setTextColor(WHITE); 
   display.println("  ");
