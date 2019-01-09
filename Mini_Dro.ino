@@ -194,8 +194,13 @@ void setup()   {
   display.display();
   delay(1000);
 
-
-  
+  //Clear the counter Bug demarrage
+  Quad_X.SetAbsolutZero();
+  Quad_X.SetRelativeZero();
+  Quad_Y.SetAbsolutZero();
+  Quad_Y.SetRelativeZero();
+  Quad_Z.SetAbsolutZero();
+  Quad_Z.SetRelativeZero();  
 }
 
 void loop() 
@@ -315,15 +320,9 @@ void Display_Test()
   char buffer_x[16];
   char buffer_y[16];
   char buffer_z[16];
-
-
-  
-  sprintf(buffer_x,"%4.3f",Quad_X.GetValue());
-  sprintf(buffer_y,"%4.3f",Quad_Y.GetValue());
-  sprintf(buffer_z,"%4.3f",Quad_Z.GetValue());
-
-  
-  
+  sprintf(buffer_x,"%8.3f",Quad_X.GetValue());
+  sprintf(buffer_y,"%8.3f",Quad_Y.GetValue());
+  sprintf(buffer_z,"%8.3f",Quad_Z.GetValue());
   display.clearDisplay();
   //Constant text
   display.setTextColor(BLACK,WHITE);
